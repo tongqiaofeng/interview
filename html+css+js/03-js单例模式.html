@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js的单例模式</title>
+</head>
+
+<body>
+  <!-- 闭包: 变量一直存在与内存中，内存泄漏 -->
+  <button id="loginBtn">登录</button>
+  <script>
+    // js的单例模式实现登录弹窗
+    // 单例模式：弹窗代码若是不使用则不生成，若是使用则只生成一次
+
+    let createLogin = function (a, b, c) {
+      console.log(a, b, c);
+      let div = document.createElement("div");
+      div.innerHTML = '登录弹窗';
+      div.style.display = 'none';
+      document.body.appendChild(div);
+
+      return div
+    }
+
+    let getSingle = function (fn) {
+      let result;
+      return function () {
+        return result || (result = fn.apply(this, arguments))
+      }
+    }
+
+    let create = getSingle(createLogin);
+
+    document.getElementById('loginBtn').onclick = function () {
+      let loginLay = create(1, 2, 3);
+
+      loginLay.style.display = 'block';
+    }
+  </script>
+</body>
+
+</html>

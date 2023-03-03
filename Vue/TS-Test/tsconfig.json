@@ -1,0 +1,4 @@
+// 配置编译过程中 输入和输出 的结果
+{
+  "files": ["07-declaration-files.ts", "axios.d.ts"]
+}

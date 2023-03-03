@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" />
+    <h1></h1>
+    <button>确定</button>
+    <script>
+      const input = document.getElementsByTagName("input")[0];
+      const h1 = document.getElementsByTagName("h1")[0];
+      const btn = document.getElementsByTagName("button")[0];
+
+      const data = { text: "" };
+      function effect() {
+        document.body.innerText = data.text;
+      }
+
+      /*
+      Proxy 这个词的原意是代理，可以理解成，在目标对象之前架设一层“拦截”，
+      外界对该目标对象的访问，都必须先通过这层拦截，因此提供了一种机制，
+      可以对外界的访问进行过滤和改写。
+      */
+      const obj = new Proxy(data, {
+        // 拦截对象属性的读取
+        get(target, key) {
+          return target[key];
+        },
+        // 拦截对象属性的设置，返回一个布尔值(修改成功)
+        set(target, key, newValue) {
+          target[key] = newValue;
+          effect();
+          return true;
+        },
+      });
+
+      btn.onclick = function () {
+        obj.text = "你好";
+        console.log(obj.text);
+      };
+    </script>
+  </body>
+</html>

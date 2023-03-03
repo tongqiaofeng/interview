@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据类型的理解</title>
+</head>
+
+<body>
+  <!-- 
+    数据存储
+    -- 一般数据类型(变量名与值都存储在 栈 中，如：变量num 值123都在栈中)
+      number string boolean null undefined Symbol
+    -- 引用数据类型(统称为object类型，数组、new Set()、new Map()都是狭义的对象)
+      变量名在 栈 中，对象内值在 堆 中，堆只是栈的指向，如：变量名 person在栈中，值 name：'张三'在堆中
+      object array Set Map
+   -->
+  <script>
+    //  赋值与浅拷贝的区别
+    // let person = {
+    //   name: '张三'
+    // }
+    // let person2 = person;
+    // person2.name = '李四';
+
+    // console.log(person.name); // 李四
+    // console.log(person2.name); // 李四
+    // 上述代码为赋值,指向同一个房间
+
+    // 浅拷贝
+    // 创建一个新的对象  新  新的房间
+    // 层次的理解
+    // 拷贝值(若属性是一般数据类型，拷贝的就是基本类型的值；若属性是引用数据类型，那拷贝的就是  内存的地址)
+    // 深拷贝
+    // 引用数据类型的属性，再开辟一个新的房间
+    let person = {
+      name: '张三',
+      favorite: ['听歌', '看小说', '旅游'],
+      doSome: [{
+        name: '洗衣服',
+        time: '30min'
+      }, {
+        name: '拖地',
+        time: '40min'
+      }]
+    }
+
+    function shallowClone(source) {
+      let newObj = {};
+      for (const index in source) {
+        console.log(index); // name
+        if (source.hasOwnProperty(index)) { // 查找一个对象是否有某个属性
+          if (source[index] && typeof source[index] === 'object') { // 如果子元素是对象，递归賦值
+            newObj[index] = shallowClone(source[index]);
+          } else {
+            newObj[index] = source[index];
+          }
+        }
+      };
+
+      return newObj
+    }
+
+    let person1 = shallowClone(person);
+    person1.name = '王五';
+    console.log(person.name); // 张三
+    console.log(person1.name); // 王五
+    person1.favorite[1] = '打球';
+    person1.doSome[0].time = '35min';
+    console.log(person);
+    console.log(person1);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>防抖函数</title>
+</head>
+
+<body>
+  <!-- 短时间内持续触发事件，让某个时间期限内事件处理函数只执行一次 -->
+  <!-- 案例：滚动条距离、屏幕适配等 -->
+  <input type="text" id="debounceInput">
+
+  <script>
+    let input = document.getElementById('debounceInput');
+    // input框输入事件：打印用户输入结果
+    // 用户在一定时间内没有再次进行输入，1s后进行输入值的打印，若是1s内再次输入，清空计时器，重新计时
+    // 防止打印函数多次执行
+
+    let debounce = function (delay, callback) {
+      let timer;
+
+      return function (value) {
+        clearTimeout(timer) // 清除以前触发的定时器，相当于清除以前的输入框内容（1  11  111等）
+        timer = setTimeout(() => {
+          callback(value)
+        }, delay)
+      }
+    }
+
+    function consoleFun(value) {
+      console.log(value);
+    }
+
+    let debounceFun = debounce(1000, consoleFun);
+    input.addEventListener('keyup', function (e) {
+      debounceFun(e.target.value);
+    })
+  </script>
+</body>
+
+</html>

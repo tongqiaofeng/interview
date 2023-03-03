@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>预编译</title>
+</head>
+
+<body>
+  <script>
+    function fn(a, c) {
+      console.log(a); // function a() {}
+      var a = 123;
+      console.log(a); // 123
+      console.log(c); // function c() {}
+
+      function a() {}; // 函数声明
+      if (false) {
+        var d = 678;
+      };
+      console.log(d); // undefined
+      console.log(b); // undefined
+      var b = function () {}; // 函数的表达式
+      console.log(b); // function () {}
+
+      function c() {}
+      console.log(c); // function c() {}
+    }
+    fn(1, 2)
+
+    //1、 预编译
+    // what？作用域的创建阶段 即预编译阶段
+    // how？作用域分为全局及函数作用域，函数作用域创建阶段有与之对应的js变量对象（AO对象），供js引擎自己访问
+    // 1、创建了AO对象 2、找形参和变量的声明，作为AO对象的属性名，值为undefined 3、实参和形参相统一 4、找函数声明，函数声明会覆盖同名称变量的声明
+
+    // AO:{
+    //   a: undefined 1 function a() {}
+    //   c: undefined 2 function c() {}
+    //   d: undefined
+    //   b: undefined
+    // }
+
+    // 2、js的解释执行  逐行执行
+    // AO:{
+    //   a: undefined 1 function a() {}
+    //   c: undefined 2 function c() {}
+    //   d: undefined
+    //   b: undefined function () {}
+    // }
+  </script>
+</body>
+
+</html>

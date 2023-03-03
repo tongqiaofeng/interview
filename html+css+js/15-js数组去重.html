@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js数组去重</title>
+</head>
+
+<body>
+  <script>
+    // 数组内为基本数据类型的项 才可实现去重
+    let arr = [8, 9, 1, 56, 8, 9, 2, 3, 4, 5, 5, 6, 7, '你好', '周五', '你好', null, undefined, null, undefined, false, true,
+      false
+    ]
+
+    // Set方法
+    function unique(arr) {
+      // return Array.from(new Set(arr))
+      return [...new Set(arr)]
+    }
+    console.log(unique(arr));
+
+    // 两次循环
+    function uniqueTwo(arr) {
+      for (let i = 0, len = arr.length; i < len; i++) {
+        for (let j = i + 1; j < len; j++) {
+          if (arr[i] === arr[j]) {
+            arr.splice(j, 1);
+            j--; // 每删除一个，得让j的值减1，不然会跳过新数组的一项数据
+            len--;
+          }
+        }
+      };
+
+      return arr
+    }
+    console.log(uniqueTwo(arr));
+
+    // indexOf
+    function uniqueThree(arr) {
+      let newArr = [];
+      for (const index in arr) {
+        if (newArr.indexOf(arr[index] === -1)) {
+          newArr.push(arr[index]);
+        }
+      };
+
+      return newArr
+    }
+    console.log(uniqueThree(arr));
+
+    // includes
+    function uniqueFour(arr) {
+      let newArr = [];
+      for (const index in arr) {
+        // console.log(newArr.includes(arr[index]));
+        if (!newArr.includes(arr[index])) {
+          newArr.push(arr[index]);
+        }
+      };
+
+      return newArr
+    }
+    console.log(uniqueFour(arr));
+
+    // filter
+    function uniqueFive(arr) {
+      // filter留下的是符合要求的，过滤掉不符合要求的
+      return arr.filter((item, index) => {
+        // item 在数组arr第一次出现的索引值  等于index
+        return arr.indexOf(item, 0) === index
+      })
+    }
+    console.log(uniqueFive(arr));
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      var a = [];
+      var b = {};
+
+      console.log(Array.isArray(a)); // true  该方法有兼容性问题
+      // instanceof运算符返回一个布尔值，表示对象是否为某个构造函数的实例
+      console.log(a instanceof Array); // true
+      console.log(a.constructor === Array); // true
+
+      // 原型链顶端方法
+      console.log(Object.prototype.toString.call(a) === "[object Array]"); // true
+      console.log(Object.prototype.toString.call(b) === "[object Object]"); // true
+
+      // 禁止此用法，因为数组和对象都可以对toString方法进行改写
+      b = {
+        toString: () => {
+          return "xxx";
+        },
+      };
+      console.log(b.toString() === "[object Object]");
+
+      // instanceof、constructor的缺点 -- 不能跨iframe
+      var iframe = document.createElement("iframe");
+      document.body.append(iframe);
+
+      // window.frames 返回当前窗口，一个类数组对象，列出了当前窗口的所有直接子窗口
+      var xArray = window.frames[window.frames.length - 1].Array;
+      console.log(xArray);
+      var arr = new xArray(1, 2, 3);
+      console.log(arr);
+      console.log(arr instanceof Array); // false
+      console.log(arr.constructor === Array); // false
+    </script>
+  </body>
+</html>

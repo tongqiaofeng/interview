@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>防抖节流优化图片懒加载</title>
+  <style>
+    div img {
+      width: 400px;
+      height: 400px;
+      margin-bottom: 20px;
+      display: block;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp05%2F1910021010125G2-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=d449ba204d24d18e78d5bac955d659d0">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1113%2F041620104229%2F200416104229-2-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=3bc4ba6a42c85bb1e5941870a03e4459">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F113020142315%2F201130142315-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=85f3c0585a5a1df2e51db5bc367876b5">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1113%2F032120114622%2F200321114622-4-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=9407a2ff9c43a08ddd720aec435fc3f5">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp08%2F01042323313046.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=e99e3de7516a51bf58b995ceccc32a9a">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2F1114%2F121420113514%2F201214113514-1-1200.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=be74bdb4a88212a5376e912558b73fd6">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.jj20.com%2Fup%2Fallimg%2Ftp01%2F1ZZQ214233446-0-lp.jpg&refer=http%3A%2F%2Fimg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=26ff87aff342941f5fdfc16cddcdba7f">
+    <img src=""
+      data-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic%2F26%2Fc8%2F69%2F26c869bc8428113a454b0207e42f339f.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1648886727&t=4b1110328047280cc826f82c3f713cc2">
+  </div>
+
+  <script>
+    let imgs = document.getElementsByTagName('img');
+    let num = document.getElementsByTagName('img').length;
+    let n = 0; // 存储图片加载到的位置，避免每次从第一张图片开始遍历
+    let isLoadImg = false; // 是否当前容器/页面中的图片 加载完成
+    let _clientHeight = document.documentElement.clientHeight; // 可见区域高度
+    let _scrollTop = document.documentElement.scrollTop || document.body.scrollTop; // 滚动条距离顶部的高度
+
+    // 监听窗口变化重新计算可视区域
+    function computedClientHeight() {
+      _clientHeight = document.documentElement.clientHeight; // 可见区域高度
+      console.log(_clientHeight);
+    }
+
+    // 页面载入完毕加载可视区域的图片
+    lazyload();
+
+    function lazyload() {
+      // 图片加载到的位置 >= 页面图片总数,说明已加载完所有图片，反之没有
+      isLoadImg = n >= num;
+      // 获取滚动条距离顶部距离
+      _scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+      for (let i = 0; i < num; i++) {
+        // 如果当前图片距离顶部距离 < (可见区域高度+滚动条距离)，说明图片在可视区域内,进行图片src属性的赋值
+        console.log(imgs[i].offsetTop);
+        console.log(_clientHeight + _scrollTop);
+        if (imgs[i].offsetTop < (_clientHeight + _scrollTop)) {
+          if (imgs[i].getAttribute('src') == '') {
+            imgs[i].src = imgs[i].getAttribute('data-src');
+          };
+
+          n = i + 1;
+        }
+      }
+    }
+
+    /**
+     简单的节流函数
+     func 要执行的函数
+     wait 延迟时间
+     flag 是否继续触发节流函数（根据需求自定义，此处是想当加载完图片时不需要再进行多余的执行---优化）
+    **/
+    function throttle(func, wait, flag) {
+      let timeOut;
+
+      return function () {
+        if (flag) {
+          return
+        }
+
+        if (!timeOut) {
+          timeOut = setTimeout(() => {
+            timeOut = null;
+            func();
+          }, wait)
+        }
+      }
+    }
+
+    /**
+     简单的防抖函数
+     callback 要执行的函数
+     delay 触发函数的时间间隔
+     arg
+    **/
+    function debounce(callback, delay) {
+      let timer;
+
+      return function (arg) {
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+          callback(arg)
+        }, delay)
+      }
+    }
+
+    // 使用节流函数~实现性能较好的懒加载
+    window.addEventListener('scroll', throttle(lazyload, 100, isLoadImg));
+
+    // 使用防抖函数~优化不断触发的窗口变化,800ms内只获取一次可视区域高度
+    window.addEventListener('resize', debounce(computedClientHeight, 800));
+  </script>
+</body>
+
+</html>

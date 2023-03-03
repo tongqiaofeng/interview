@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>节流函数</title>
+</head>
+
+<body>
+  <!-- 当持续触发事件的时候，保证一段时间内只调用一次事件处理函数 -->
+  <!-- 案例：鼠标不断点击触发，规定在n秒内多次点击只有一次有效 -->
+  <button id="btnClick">节流</button>
+
+  <script>
+    function buttonClick(func, delay) {
+      let timerOut;
+
+      return function () {
+        if (!timerOut) {
+          timerOut = setTimeout(() => {
+            func();
+            // 事件处理完成，初始化值，使得下一次点击继续执行事件
+            timerOut = null
+          }, delay)
+        }
+
+      }
+    }
+
+    function disposeFun() {
+      console.log(Math.random());
+    }
+    document.getElementById('btnClick').onclick = buttonClick(disposeFun, 2000);
+  </script>
+</body>
+
+</html>

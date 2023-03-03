@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js事件处理机制</title>
+</head>
+
+<body>
+  <div id="div1">
+    <div id="div2">
+      <div id="div3"></div>
+    </div>
+  </div>
+
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+  </ul>
+  <script>
+    // 事件委托先于事件冒泡
+    // 事件冒泡：事件开始时由最具体的元素（代码中嵌套层次最深的那个节点，点击的那个元素）接收，然后逐级向上传播到元素节点
+    document.getElementById('div3').onclick = function (event) { // event 事件对象
+      event.stopPropagation(); // 阻止事件冒泡
+    }
+
+    //  事件委托（事件捕获）
+    document.getElementById('div1').addEventListener('click', function (event) {
+      console.log(event);
+    }, {
+      capture: true // 让事件在事件捕获阶段触发
+    })
+
+    document.getElementsByTagName('ul')[0].onclick = function (event) {
+      console.log(event);
+      console.log(event.target.innerText);
+    }
+  </script>
+
+</body>
+
+</html>

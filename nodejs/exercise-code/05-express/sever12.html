@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+
+<body>
+  <button id="getBtn">GET请求</button>
+  <button id="postBtn">POST请求</button>
+  <button id="delBtn">delete请求</button>
+  <button id="jsonpBtn">JSONP跨域请求</button>
+  <script src="https://cdn.staticfile.org/jquery/1.10.0/jquery.min.js"></script>
+  <script>
+    $(function () {
+      // 测试get请求
+      $('#getBtn').on('click', () => {
+        $.ajax({
+          type: 'GET',
+          url: 'http://192.168.0.120:1010/api/user',
+          data: {
+            page: 1,
+            pageNum: 10,
+            keyword: '张飒'
+          },
+          success: (res) => {
+            console.log(res);
+          }
+        })
+      })
+
+      // 测试post请求
+      $('#postBtn').on('click', () => {
+        $.ajax({
+          type: 'POST',
+          url: 'http://192.168.0.120:1010/api/addUser',
+          data: {
+            name: '风月',
+            age: 16,
+            gender: '女',
+            birthday: '3-18'
+          },
+          success: (res) => {
+            console.log(res);
+          }
+        })
+      })
+
+      // 测试delete请求
+      $('#delBtn').on('click', () => {
+        $.ajax({
+          type: 'DELETE',
+          url: 'http://192.168.0.120:1010/api/delUser',
+          data: {
+            id: 1
+          },
+          success: (res) => {
+            console.log(res);
+          }
+        })
+      })
+
+      // JSONP 跨域
+      $('#jsonpBtn').on('click', () => {
+        $.ajax({
+          type: 'GET',
+          url: 'http://192.168.0.120:1010/api/jsonpTest',
+          dataType: 'jsonp',
+          success: (res) => {
+            console.log(res);
+          }
+        })
+      })
+    })
+  </script>
+</body>
+
+</html>

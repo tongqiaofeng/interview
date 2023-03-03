@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>js代码优化</title>
+  </head>
+
+  <body>
+    <script>
+      // function getAnimalMsg(animal) {
+      //   if (animal) {
+      //     if (animal.type) {
+      //       if (animal.age) {
+      //         if (animal.gender) {
+      //           return `${gender}${type}今年${age}岁`
+      //         } else {
+      //           return 'no animal gender'
+      //         }
+      //       } else {
+      //         return 'no animal age'
+      //       }
+      //     } else {
+      //       return 'no animal type'
+      //     }
+      //   } else {
+      //     return 'no animal'
+      //   }
+      // }
+
+      // 优化
+      function getAnimalMsg({ type, age, gender } = {}) {
+        if ([...arguments].length == 0) return "no animal";
+        if (!type) return "no animal type";
+        if (!age) return "no animal age";
+        if (!gender) return "no animal gender";
+
+        return `${gender}${type}今年${age}岁`;
+      }
+
+      console.log(
+        getAnimalMsg({
+          type: "狗狗",
+          age: "5",
+          gender: "女",
+        })
+      );
+
+      // 数组includes方法
+      let arr = ["tom", "jerry", "jenny"];
+      if (arr.includes("tom")) {
+        console.log("tom");
+      }
+
+      // 对象的 字面量 代替switch case语法
+      // function fruitName(color) {
+      //   switch (color) {
+      //     case "red":
+      //       return ["apple"];
+      //       break;
+      //     case "yellow":
+      //       return ["banana"];
+      //       break;
+      //     default:
+      //       return [];
+      //       break;
+      //   }
+      // }
+      // console.log(fruitName("yellow"));
+
+      const fruitObj = {
+        red: ["apple"],
+        yellow: ["banana"],
+      };
+
+      function fruitName(color) {
+        return fruitObj[color] || [];
+      }
+      console.log(fruitName("yellow"));
+
+      // new Map声明对象
+      /**
+       * 对象和Map的区别就是：
+      　　对象的key是字符串或者是Symbol，map的key可以是任何类型；
+      　　用法不一样，你要还是a[b]="b"，这样赋值取值 ，那结果不会变和对象时一样。
+       * **/
+      const obj = new Map().set("name", ["tom", "jack"]).set("age", 18);
+
+      // Array.some() Array.every()
+      const animals = [
+        { name: "dog", color: "yellow" },
+        { name: "cat", color: "black" },
+      ];
+
+      let res = animals.every((item) => item.color === "yellow");
+      console.log(res);
+
+      let res2 = animals.some((item) => item.color === "yellow");
+      console.log(res2);
+    </script>
+  </body>
+</html>

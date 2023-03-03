@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js的继承</title>
+</head>
+
+<body>
+  <script>
+    // 原型链继承
+    function Parent() {
+      this.name = ['张飒']
+    }
+    Parent.prototype.getName = function () {
+      return this.name
+    }
+
+    function Child() {}
+    // 子类的原型指向父类的实例
+    Child.prototype = new Parent()
+
+    const child = new Child()
+
+    // 弊端：对某一个child实例继承自父类的 引用类型 变量的修改，会影响到所有继承父类的child
+    const child2 = new Child();
+    child2.name[0] = '李四';
+    console.log(child2.name);
+    console.log(child.name);
+
+    console.log(child2.getName());
+    console.log(child.getName());
+
+
+
+    // 构造函数继承
+    // 在子类的构造函数中 执行父类的构造函数 并且为其绑定子类的this(改变this指向)
+    function Animals(name) {
+      this.name = [name]
+    }
+    Animals.prototype.getName = function () {
+      return this.name
+    }
+
+    function Dog() {
+      Animals.call(this, '中华田园犬');
+    }
+
+    // 弊端：继承不到父类原型上的方法和属性
+    const dog1 = new Dog()
+    const dog2 = new Dog()
+    dog1.name[0] = '藏獒';
+    console.log(dog1.name);
+    console.log(dog2.name);
+    // dog1.getName(); // dog1.getName is not a function
+
+
+
+    // 组合式继承
+    function Car(name) {
+      this.name = [name]
+    }
+    Car.prototype.getName = function () {
+      return this.name
+    }
+
+    function Bus(name) {
+      Car.call(this, name);
+    }
+    // 设置原型
+    // Bus.prototype = new Car()
+    // 寄生组合式继承
+    // Bus.prototype = Car.prototype; // 如此就不会反复创建Car实例，但是会造成子类若是增加了一个方法或属性，父类也会增加
+    // 通过浅拷贝避免上述问题
+    Bus.prototype = Object.create(Car.prototype)
+    // 设置原型的构造器，指向该原型对象对应的构造函数,识别对象是由哪个构造函数初始化的
+    Bus.prototype.constructor = Bus
+
+    Bus.prototype.getCar = function () {
+      console.log('这是子类增加的一个方法 getCar');
+    }
+
+    const bus1 = new Bus('奥迪')
+    const bus2 = new Bus('玛莎拉蒂')
+    bus1.name[0] = '奔驰';
+
+    console.log(bus1.name);
+    console.log(bus2.name);
+    console.log(bus1.getName());
+    console.log(bus2.getName());
+    let car = new Car();
+    car.getCar();
+  </script>
+</body>
+
+</html>

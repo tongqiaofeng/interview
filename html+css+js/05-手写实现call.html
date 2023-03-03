@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手写实现call、apply</title>
+</head>
+
+<body>
+  <script>
+    // call apply的作用是什么  区别是什么
+    // 谈谈call apply
+    // 实际开发中用过call apply的场景
+
+    // 改变this指向  参数不同，call参数为单向的一个数据，apply参数为数组
+    // 1、js的继承：原型链继承、构造函数继承  用call实现
+    // 2、js的数据类型
+    // console.log(Object.prototype.toString.call({}) === '[object Object]');
+    // console.log(Object.prototype.toString.call([]) === '[object Array]');
+    // // 3、es5  把伪数组转化为数组
+    // function getData() {
+    //   console.log(arguments);
+    //   console.log([...arguments]); // es6
+    //   console.log(Array.prototype.slice.call(arguments));
+    // }
+
+    // getData(1, 2, 3)
+
+
+    // 手写call 
+    let person = {
+      getName: function () {
+        // 此处this指向window
+        // 改变此处this指向为person2
+        console.log(this);
+        console.log(this.name);
+      }
+    }
+
+    let person2 = {
+      name: '张二航'
+    }
+
+    // 接收的参数 是改变this指向的参数
+    Function.prototype.myCall = function (context) {
+      // 此处的this是谁？？   getName
+      // 此处的this必须是一个function
+      if (typeof this !== 'function') {
+        throw new Error('error')
+      }
+
+      // 上下文默认为window
+      context = context || window
+
+      // 考虑其他参数
+      //         扩展符
+      let args = [...arguments].slice(1);
+      console.log(args);
+
+      console.log(this); // 此处this指向不可改变，只会是getName
+      /*
+      this = function () {
+        // 此处this指向window
+        // 改变此处this指向为person2
+        console.log(this);
+        console.log(this.name);
+      }
+      */
+      // 在person2上假装有一方法为上面函数，这样函数内this就会是person2
+      context.funs = this
+      // let result = this(...args); // 只能改变this执行时其函数内this的指向
+      let result = context.funs(...args)
+      delete context.funs
+
+      return result
+    }
+
+    person.getName.myCall(person2, 1, 2, 3, 4)
+  </script>
+</body>
+
+</html>

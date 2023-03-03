@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>全选和取消全选</title>
+</head>
+
+<body>
+	<h2>管理员列表</h2>
+	<table border="1px" width="500px">
+		<thead>
+			<tr>
+				<th><input id="allChecked" type="checkbox" />全选</th>
+				<th>管理员ID</th>
+				<th>姓名</th>
+			</tr>
+		</thead>
+		<tbody id="tableTbody">
+		</tbody>
+	</table>
+	<h3>总价：<span id="totalPrice"></span></h3>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		(function () {
+			let list = [{
+				id: 1,
+				name: '张三',
+				price: 1000,
+				checked: false
+			}, {
+				id: 2,
+				name: '李四',
+				price: 2000,
+				checked: false
+			}, {
+				id: 3,
+				name: '王五',
+				price: 3000,
+				checked: false
+			}];
+
+			console.log('9999999999999');
+			console.log($('#tableTbody'));
+
+			// 循环数组，动态生成标签放入id="tableTbody"标签内
+			for (let i in list) {
+				$('#tableTbody')[0].innerHTML += `
+				<tr>
+					<td><input type="checkbox" id="${'everyCheck'+i}" name="every"/></td>
+					<td>${list[i].id}</td>
+					<td>${list[i].name}</td>
+				</tr>`
+			}
+
+			let isCheckedList = []; // 选中的值，可以传往后端
+
+			// 给循环生成的input多选框添加属性及事件
+			for (let j in list) {
+				$('#everyCheck' + j).prop('checked', list[j].checked);
+				$('#everyCheck' + j).prop('value', JSON.stringify(list[
+					j])); // input的value只能为字符串，所以使用JSON.stringify()将对象数据转为json字符串
+				$('#everyCheck' + j).bind('change', changeone)
+			}
+
+			function changeone(e) {
+				console.log('44444444444433333333333');
+				console.log(e);
+				// 	如果当前点击的多选框的值为true，即选中
+				if (e.target.checked == true) {
+					// 将该多选框绑定的值放入isCheckedList中
+					isCheckedList.push(JSON.parse(e.target.defaultValue)); // JSON.parse()将json字符串转为对象数据
+
+					var unchecked = $("input[name='every']:not(:checked)");
+					console.log('是否有未选中的选框');
+					console.log(unchecked);
+
+					if (unchecked.length == 0) { //如果未选中的选框为空
+						// 选中全选
+						$('#allChecked').prop('checked', true);
+					} else {
+						// 否则  取消全选
+						$('#allChecked').prop('checked', false);
+					}
+				} else if (e.target.checked == false) { // 当前多选框未选中
+					$('#allChecked').prop('checked', false);
+
+					for (let index in isCheckedList) {
+						if (isCheckedList[index].id == JSON.parse(e.target.defaultValue).id) {
+							isCheckedList.splice(index, 1);
+						}
+					}
+				}
+
+				console.log('选中的数据');
+				console.log(isCheckedList);
+				let num = 0;
+				for (const item of isCheckedList) {
+					num += item.price;
+				}
+				console.log(num);
+				$("#totalPrice").html(num);
+			}
+
+			// 全选/非全选
+			$('#allChecked').change(e => {
+				isCheckedList = [];
+				if (e.target.checked == true) {
+					for (let j in list) {
+						$('#everyCheck' + j).prop('checked', true);
+						isCheckedList.push(list[j]);
+					}
+				} else if (e.target.checked == false) {
+					for (let j in list) {
+						$('#everyCheck' + j).prop('checked', false);
+					}
+				}
+
+				console.log('全选与否');
+				console.log(isCheckedList);
+				let num = 0;
+				for (const item of isCheckedList) {
+					num += item.price;
+				}
+				$("#totalPrice").html(num)
+			})
+		})()
+	</script>
+</body>
+
+</html>

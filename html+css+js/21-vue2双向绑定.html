@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" />
+    <h1></h1>
+    <button>确定</button>
+    <script>
+      // 命令式代码 操作dom
+      const input = document.getElementsByTagName("input")[0];
+      const h1 = document.getElementsByTagName("h1")[0];
+      const btn = document.getElementsByTagName("button")[0];
+
+      // Vue  声明式代码 只看结果
+      // 双向绑定：当输入框内容发生改变时，v-model绑定的数据会变化，当数据变化时，页面输入框的内容也会变化
+      // value属性 与 @input事件
+      // vue2
+
+      var data = getObj();
+      input.addEventListener("input", function (e) {
+        data.text = e.target.value;
+        console.log(data["text"]);
+      });
+      btn.onclick = function () {
+        data.text = "你好";
+        console.log(data["text"]);
+      };
+
+      console.log(data["text"]);
+      // Uncaught RangeError: Maximum call stack size exceeded
+      // 原因在于,get函数中,return obj['text']会再一次触发get函数导致死循环
+      /*
+      利用闭包返回一个新的对象
+      Object.defineProperty使用时,如果需要设置get,set,那么要包一层函数,
+      最后返回的是生成的object,把get,set操作的值放在函数内部,防止外部污染
+      */
+
+      function getObj() {
+        let obj = { text: "" };
+        let val = "";
+        let newObj = Object.defineProperty(obj, "text", {
+          configurable: true, // text属性可删除可修改
+          enumerable: true, // text属性可枚举
+          get: function () {
+            return val;
+          },
+          set: function (newValue) {
+            val = newValue;
+            h1.innerText = newValue;
+            input.value = newValue;
+          },
+        });
+
+        return newObj;
+      }
+
+      // for (const key in data) {
+      //   console.log(key);
+      // }
+      // delete data.text;
+    </script>
+  </body>
+</html>
