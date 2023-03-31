@@ -2,26 +2,40 @@
   <div class="upload-imgs">
     <div class="add">
       <form enctype="multipart/form-data" style="width: 100px; height: 100px">
-        <input @change="inputChange($event)" type="file" name="upload-images" accept="image/*" class="inputUpload"
-          multiple />
-        <el-icon class="addIcon">
-          <Plus />
-        </el-icon>
+        <input
+          @change="inputChange($event)"
+          type="file"
+          name="upload-images"
+          accept="image/*"
+          class="inputUpload"
+          multiple
+        />
+        <el-icon class="addIcon"><Plus /></el-icon>
       </form>
     </div>
 
-    <draggable :list="imageUrl" item-key="index" animation="300" style="display: flex; flex-wrap: wrap"
-      @end="overImgData">
+    <draggable
+      :list="imageUrl"
+      item-key="index"
+      animation="300"
+      style="display: flex; flex-wrap: wrap"
+      @end="overImgData"
+    >
       <template #item="{ element }">
         <div class="item" v-if="element">
           <div class="every-img">
             <span class="spanStyle" @click="delImage(element)">x</span>
-            <el-image preview-teleported :src="base_request_url + '/file/' + element" style="
-                  width: 100px;
-                  height: 100px;
-                  border-radius: 5px;
-                  object-fit: cover;
-                " :preview-src-list="imgListFilter()" />
+            <el-image
+              preview-teleported
+              :src="base_request_url + '/file/' + element"
+              style="
+                width: 100px;
+                height: 100px;
+                border-radius: 5px;
+                object-fit: cover;
+              "
+              :preview-src-list="imgListFilter()"
+            />
           </div>
         </div>
       </template>
@@ -34,13 +48,14 @@ import { ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 
 import { base_request_url } from "@/request/http";
-import { uploadPort } from "@/request/api/api";
+// import { uploadPort } from "@/request/api/system";
 
 import draggable from "vuedraggable";
 
 const props = defineProps({
   imgUrl: {
-    type: [Array],
+    required: true,
+    type: Array,
     default: [],
   },
 });
@@ -59,7 +74,7 @@ watch(
 
 const emit = defineEmits(["imgChange"]);
 
-const imgListFilter = () => {
+const imgListFilter = (): string[] => {
   let list: any = [];
   list = imageUrl.value.map((item) => {
     if (item) {
@@ -202,19 +217,17 @@ function base64UrlToBlob2(urlData: any) {
 }
 // 返回file文件，调用接口执行上传
 function uploadLice2(file: any) {
-  uploadPort({
-    file,
-  }).then((res: any) => {
-    ElMessage.success("图片上传成功");
-
-    imageUrl.value.push(res.data.fileName);
-
-    emit("imgChange", {
-      img: imageUrl.value.filter((el) => {
-        return el != "";
-      }),
-    });
-  });
+  // uploadPort({
+  //   file,
+  // }).then((res: any) => {
+  //   ElMessage.success("图片上传成功");
+  //   imageUrl.value.push(res.data.fileName);
+  //   emit("imgChange", {
+  //     img: imageUrl.value.filter((el) => {
+  //       return el != "";
+  //     }),
+  //   });
+  // });
 }
 // 删除图片
 function delImage(item: string) {

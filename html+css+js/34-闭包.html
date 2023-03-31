@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 概念：能够访问到其它函数作用域中的对象的函数，称为闭包
+
+      // 常见的使用场景：
+      /*
+        1. 回调函数
+        事件的回调
+        获取异步操作的内容(ajax请求、定时器、promise等)
+      */
+      function fn(cb) {
+        setTimeout(() => {
+          let a = 0;
+          cb(0);
+        }, 100);
+      }
+      fn((num) => {
+        console.log(num);
+      });
+
+      // 2. 自调用函数封装的私有方法
+      let counter = (() => {
+        let num = 0;
+        function getSum(val) {
+          num += val;
+        }
+
+        return {
+          fun1: function () {
+            getSum(2);
+            console.log(num);
+          },
+          fun2: function () {
+            getSum(3);
+          },
+        };
+      })();
+      counter.fun1();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 我们能否以某种方式为下面的语句使用展开运算而不导致类型错误？
+      // 错误代码示例
+      let obj = { x: 1, y: 2, z: 3 };
+      // console.log(...obj); // 得到结果[1,2,3]而不是报错
+      // Uncaught TypeError: Spread syntax requires ...iterable[Symbol.iterator] to be a function
+
+      let arr = [1, 2, 3];
+      console.log(arr[Symbol.iterator]); // 是一个方法，ƒ values() { [native code] }
+      let iterable = arr[Symbol.iterator]();
+      console.log(iterable.next()); // {value: 1, done: false}
+      console.log(iterable.next()); // {value: 2, done: false}
+      console.log(iterable.next()); // {value: 3, done: false}
+      console.log(iterable.next()); // {value: undefined, done: true}
+
+      // 对象没有Symbol.iterator属性，自定义一个
+      obj[Symbol.iterator] = function () {
+        return {
+          next: function () {
+            let objArr = Reflect.ownKeys(obj);
+            if (this.index < objArr.length - 1) {
+              let key = objArr[this.index];
+              this.index++;
+              return {
+                value: obj[key],
+              };
+            } else {
+              return {
+                done: true,
+              };
+            }
+          },
+          index: 0,
+        };
+      };
+      console.log([...obj]); // [1,2,3]
+    </script>
+  </body>
+</html>

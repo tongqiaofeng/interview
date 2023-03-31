@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // 获取页面中所有不重复的元素
+      // let tagNames = Array.from(document.querySelectorAll("*"))
+      // 伪数组转为数组，遍历返回标签名称
+      let tagNames = [].slice
+        .call(document.querySelectorAll("*"))
+        .map((dom) => dom.tagName);
+
+      let result = [];
+      tagNames.forEach((item) => {
+        if (result.indexOf(item) === -1) {
+          return result.push(item);
+        }
+      });
+
+      console.log(tagNames);
+      console.log(result);
+
+      let newRes = [
+        ...new Set([...document.querySelectorAll("*")].map((v) => v.tagName)),
+      ];
+      console.log(newRes);
+
+      // 下列执行结果
+      function fn() {
+        return new Promise((resolve) => {
+          console.log("Promise1");
+          fn1();
+
+          setTimeout(() => {
+            console.log("Promise2");
+            resolve();
+            console.log("Promise3");
+          }, 0);
+        });
+      }
+
+      async function fn1() {
+        var p = Promise.resolve().then(() => {
+          console.log("Promise6");
+        });
+
+        await p.then(() => {
+          console.log("Promise7");
+        });
+
+        console.log("end");
+      }
+
+      console.log("script");
+
+      setTimeout(() => {
+        console.log("setTimeout");
+      }, 0);
+
+      fn().then(() => {
+        console.log("Promise4");
+      });
+
+      /*
+      调用栈
+      script
+      
+      微任务 promise async await异步操作
+      Promise1
+      Promise6
+      Promise7
+      end
+      
+      消息队列 js异步操作，setTimeout，Ajax等
+      setTimeout
+      Promise2
+      Promise3
+      Promise4 resolve()会在.then的时候调用
+      */
+    </script>
+  </body>
+</html>

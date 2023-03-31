@@ -1,61 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>this的大厂面试题</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>this的大厂面试题</title>
-</head>
-
-<body>
-  <script>
-    // 在函数中（函数即对象）直接使用   this指向window
-    function get(content) {
-      console.log(content);
-    }
-
-    get('你好呀')
-    //  ||
-    get.call(window, '你好呀')
-
-
-    // 函数作为对象的方法被调用(谁调用我，我就指向谁)
-    var person = {
-      name: '张飒',
-      run: function (time) {
-        console.log(`${this.name} 在跑步，最多${time}分钟就不行了`);
+  <body>
+    <script>
+      // 在函数中（函数即对象）直接使用   this指向window
+      function get(content) {
+        console.log(content);
       }
-    }
 
-    person.run(40)
-    person.run.call(person, 50)
+      get("你好呀");
+      //  ||
+      get.call(window, "你好呀");
 
+      // 函数作为对象的方法被调用(谁调用我，我就指向谁)
+      var person = {
+        name: "张飒",
+        run: function (time) {
+          console.log(`${this.name} 在跑步，最多${time}分钟就不行了`);
+        },
+      };
 
-    // 阿里笔试题
-    var name = 222
-    var a = {
-      name: 111,
-      say: function () {
-        console.log(this.name);
-      }
-    }
+      person.run(40);
+      person.run.call(person, 50);
 
-    var fun = a.say
-    fun() // fun.call(window)  222
-    a.say() // a.say.call(a)  111
+      // 阿里笔试题
+      var name = 222;
+      var a = {
+        name: 111,
+        say: function () {
+          console.log(this.name);
+        },
+      };
 
-    var b = {
-      name: 333,
-      say: function (fun) {
-        fun() // fun.call(window)
-      }
-    }
-    b.say(a.say) // 222
+      var fun = a.say;
+      fun(); // fun.call(window)  222
+      a.say(); // a.say.call(a)  111
 
-    b.say = a.say
-    b.say() // b.say.call(b) 333
-  </script>
-</body>
+      var b = {
+        name: 333,
+        say: function (fun) {
+          fun(); // fun.call(window)
+          // 相当于在这里执行传进来的方法，而不是打印this的name
+        },
+      };
+      b.say(a.say); // 222
 
+      b.say = a.say;
+      b.say(); // b.say.call(b) 333
+    </script>
+  </body>
 </html>

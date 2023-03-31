@@ -1,45 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>js的单例模式</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>js的单例模式</title>
-</head>
+  <body>
+    <!-- 闭包: 变量一直存在与内存中，内存泄漏 -->
+    <button id="loginBtn">登录</button>
+    <script>
+      // 单例模式定义：保证一个类仅有一个实例，并提供一个访问它的全局访问点
+      // js的单例模式实现登录弹窗
+      // 单例模式：弹窗代码若是不使用则不生成，若是使用则只生成一次
 
-<body>
-  <!-- 闭包: 变量一直存在与内存中，内存泄漏 -->
-  <button id="loginBtn">登录</button>
-  <script>
-    // js的单例模式实现登录弹窗
-    // 单例模式：弹窗代码若是不使用则不生成，若是使用则只生成一次
+      let getSingle = function (fn) {
+        let result;
+        return function () {
+          return result || (result = fn.apply(this, arguments));
+        };
+      };
 
-    let createLogin = function (a, b, c) {
-      console.log(a, b, c);
-      let div = document.createElement("div");
-      div.innerHTML = '登录弹窗';
-      div.style.display = 'none';
-      document.body.appendChild(div);
+      let createLogin = function (a, b, c) {
+        console.log(a, b, c);
+        let div = document.createElement("div");
+        div.innerHTML = "登录弹窗";
+        div.style.display = "none";
+        document.body.appendChild(div);
 
-      return div
-    }
+        return div;
+      };
 
-    let getSingle = function (fn) {
-      let result;
-      return function () {
-        return result || (result = fn.apply(this, arguments))
+      let create = getSingle(createLogin);
+
+      document.getElementById("loginBtn").onclick = function () {
+        let loginLay = create(1, 2, 3);
+
+        loginLay.style.display = "block";
+      };
+    </script>
+
+    <script>
+      // es6 class类实现单例模式
+      // class类 底层原理是 es5 构造函数的语法糖
+      /*
+         构造函数：属性和方法
+       * 属性：定义在构造函数之内
+       * 方法：定义在原型对象之内 --- 这样可以实现，每一实例对象都共享这个方法！
+      */
+      function Test(name, age) {
+        this.name = name;
+        this.age = age;
       }
-    }
+      Test.prototype.userMsg = function () {
+        console.log(`${this.name}今年${this.age}岁`);
+      };
 
-    let create = getSingle(createLogin);
+      let lj = new Test("李江", 18);
+      let zs = new Test("张三", 22);
+      lj.userMsg();
+      zs.userMsg();
 
-    document.getElementById('loginBtn').onclick = function () {
-      let loginLay = create(1, 2, 3);
+      class SingleApple {
+        constructor(name, creator, products) {
+          // 若为 首次使用构造器实例
+          if (!SingleApple.instance) {
+            this.name = name;
+            this.creator = creator;
+            this.products = products;
+            // 将this挂载到SingleApple这个类的instance属性上
+            SingleApple.instance = this;
+          }
 
-      loginLay.style.display = 'block';
-    }
-  </script>
-</body>
+          return SingleApple.instance;
+        }
+      }
 
+      let appleCompany = new SingleApple("xx公司", "大强", ["aa", "bb"]);
+      let copyCompany = new SingleApple("yy公司", "二强", ["aa", "bb"]);
+      console.log(appleCompany === copyCompany);
+
+      // 静态方法优化代码
+      // 类相当于实例的原型，所有在类中定义的方法，都会被实例继承。
+      // 如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为“静态方法”。
+      class SingleApple2 {
+        constructor(name, creator, products) {
+          this.name = name;
+          this.creator = creator;
+          this.products = products;
+        }
+
+        static getInstance(name, creator, products) {
+          if (!this.instance) {
+            this.instance = new SingleApple2(name, creator, products);
+          }
+
+          return this.instance;
+        }
+      }
+
+      let appleCompany2 = SingleApple2.getInstance("xx公司", "大强", [
+        "aa",
+        "bb",
+      ]);
+      let copyCompany2 = SingleApple2.getInstance("yy公司", "二强", [
+        "aa",
+        "bb",
+      ]);
+      console.log(appleCompany2 === copyCompany2);
+    </script>
+  </body>
 </html>

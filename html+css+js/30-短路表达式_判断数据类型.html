@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function judgeType(data) {
+        let type = null;
+
+        if (typeof data === "object") {
+          // 短路表达式
+          // &&前边的判断条件成立，会返回&&后边的值，不成立返回前边的值
+          Object.prototype.toString.call(data) === "[object Array]" &&
+            (type = "array");
+          Object.prototype.toString.call(data) === "[object Object]" &&
+            (type = "object");
+        } else {
+          typeof data === "string" && (type = "string");
+          typeof data === "number" && (type = "number");
+          typeof data === "boolean" && (type = "boolean");
+          typeof data === "undefined" && (type = "undefined");
+          typeof data === "function" && (type = "function");
+        }
+
+        return type;
+      }
+
+      console.log(judgeType([1, 2, 3]));
+      console.log(judgeType({ a: 1, b: 2 }));
+      console.log(judgeType("www"));
+      console.log(judgeType(200));
+      console.log(judgeType(true));
+      console.log(judgeType(undefined));
+      console.log(judgeType(() => {}));
+    </script>
+  </body>
+</html>

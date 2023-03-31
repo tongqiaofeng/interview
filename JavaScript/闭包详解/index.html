@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // var value = 1;
+    // function foo() {
+    //   console.log(value); // 1
+    // }
+
+    // function bar() {
+
+    //   //
+    //   var value = 2;
+    //   foo();
+    // }
+
+    // bar();
+
+    // function a() {
+    //   console.dir(a);
+    // }
+
+    // a()
+    // console.dir(a) // 打印结构
+
+
+    // var global
+    // function a() {
+    //   var aa = 123
+    //   function b() {
+    //     console.log(aa);
+    //   }
+    //   return b
+    // }
+    // var res = a()
+    // res()
+
+
+    // var global
+    // function a() {
+
+    //   var aa = 123
+
+    //   function b() {
+
+    //     var bb = 234
+    //     aa = 0
+    //   }
+
+    //   b()
+    //   console.log(aa);
+    // }
+
+    // a()
+
+    // function add(num1, num2, callback) {
+    //   var sum = num1 + num2;
+    //   if (typeof callback === 'function') {//类型判断，确认是一个函数
+    //     callback(sum);
+    //   }
+    // }
+
+    // add(1, 2, function (sum) {
+    //   console.log(sum);
+    // })
+    function get(a) {
+      return function () {
+        console.log(a);
+      }
+    }
+
+    setTimeout(get('王超越长得很漂亮'), 1000)
+
+
+
+
+  </script>
+</body>
+
+</html>
